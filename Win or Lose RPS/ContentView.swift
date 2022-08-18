@@ -11,10 +11,11 @@ let moves: [String] = ["rock", "paper", "scissors"]
 
 struct ContentView: View {
     
-    @State var currentChoice: String = moves[Int.random(in: 0..<3)]
+    @State var currentChoice = Int.random(in: 0..<3)
     @State var shouldWin: Bool = Bool.random()
     @State var playerScore: Int = 0
     var playerChoice: String = "rock"
+    var playerHasPlayed = false
     var game: Int = 1
     
     var body: some View {
@@ -22,21 +23,35 @@ struct ContentView: View {
             Text("Win or lose RPS")
                 .font(.largeTitle)
                 .padding(.top)
-            Text("Standard rock paper scissors rules but you win by winning or losing according to below")
+            Text("Standard rock paper scissors rules, you win if you fufill the objective")
                 .font(.subheadline)
                 .padding(.horizontal)
                 .multilineTextAlignment(.center)
             
-            // Playerscore
-            Text("Current score: \(String(playerScore))")
-                .padding()
-            
-            // Win or lose
-            Text("Win objective: \(shouldWin ? "Win" : "Lose")")
+            HStack {
+                // Playerscore
+                Text("Current score: \(String(playerScore))")
+                    .font(.title2)
+                    .padding()
+                
+                // Objective
+                Text("Objective: \(shouldWin ? "Win" : "Lose")")
+                    .font(.title2)
+                }
             Spacer()
             
             // App's move
-                        
+            Image(playerHasPlayed ? moves[currentChoice] : "question")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .padding(40)
+                .background(Color.gray)
+                .clipShape(Circle())
+                .overlay(Circle().stroke(Color.black, lineWidth: 4))
+                .padding(.horizontal, 125)
+            Spacer()
+            Divider()
+
             // Your move
             HStack {
                 Button() {
@@ -78,11 +93,8 @@ struct ContentView: View {
                 .overlay(Circle().stroke(Color.black, lineWidth: 4))
                 .padding()
             }
-            
-            Spacer()
         }
     }
-    
 }
 
 struct ContentView_Previews: PreviewProvider {
