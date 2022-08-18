@@ -11,26 +11,26 @@ let moves: [String] = ["rock", "paper", "scissors"]
 
 struct ContentView: View {
     
-    @State var currentChoice = Int.random(in: 0..<3)
+    @State var currentChoice: Int = Int.random(in: 0..<3)
     @State var shouldWin: Bool = Bool.random()
     @State var playerScore: Int = 0
-    var playerChoice: String = "rock"
-    var playerHasPlayed = false
-    var game: Int = 1
+    @State var playerChoice: String = "rock"
+    @State var playerHasPlayed: Bool = false
+    @State var game: Int = 1
     
     var body: some View {
         VStack {
             Text("Win or lose RPS")
                 .font(.largeTitle)
                 .padding(.top)
-            Text("Standard rock paper scissors rules, you win if you fufill the objective")
+            Text("Standard rock paper scissors rules\n Fufill the objective below")
                 .font(.subheadline)
                 .padding(.horizontal)
                 .multilineTextAlignment(.center)
             
             HStack {
                 // Playerscore
-                Text("Current score: \(String(playerScore))")
+                Text("Score: \(String(playerScore))")
                     .font(.title2)
                     .padding()
                 
@@ -41,21 +41,24 @@ struct ContentView: View {
             Spacer()
             
             // App's move
-            Image(playerHasPlayed ? moves[currentChoice] : "question")
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .padding(40)
-                .background(Color.gray)
-                .clipShape(Circle())
-                .overlay(Circle().stroke(Color.black, lineWidth: 4))
-                .padding(.horizontal, 125)
+            ZStack {
+                Circle()
+                    .fill(Color.gray)
+                    .overlay(Circle().stroke(Color.black, lineWidth: 4))
+                Image(playerHasPlayed ? moves[currentChoice] : "question")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .padding(playerHasPlayed ? 10 : 40)
+            }
+            .padding(.horizontal, 125)
+
             Spacer()
             Divider()
 
             // Your move
             HStack {
                 Button() {
-                    
+                    appPlay("rock")
                 } label: {
                     Image("rock")
                         .resizable()
@@ -68,7 +71,7 @@ struct ContentView: View {
                     Circle().stroke(Color.black, lineWidth: 4))
                 .padding()
                 Button() {
-                    
+                    appPlay("paper")
                 } label: {
                     Image("paper")
                         .resizable()
@@ -81,7 +84,7 @@ struct ContentView: View {
                     Circle().stroke(Color.black, lineWidth: 4))
                 .padding()
                 Button() {
-                    
+                    appPlay("scissors")
                 } label: {
                     Image("scissors")
                         .resizable()
@@ -94,6 +97,12 @@ struct ContentView: View {
                 .padding()
             }
         }
+    }
+    
+    func appPlay(_ playerChoice: String) {
+        playerHasPlayed = true
+        currentChoice = Int.random(in: 0..<3)
+        self.playerChoice = playerChoice
     }
 }
 
