@@ -11,12 +11,15 @@ let moves: [String] = ["rock", "paper", "scissors"]
 
 struct ContentView: View {
     
-    @State var currentChoice: Int = Int.random(in: 0..<3)
-    @State var shouldWin: Bool = Bool.random()
-    @State var playerScore: Int = 0
-    @State var playerChoice: String = "rock"
-    @State var playerHasPlayed: Bool = false
-    @State var game: Int = 1
+    @State private var computerChoice: String = moves[Int.random(in: 0..<3)]
+    @State private var shouldWin: Bool = Bool.random()
+    @State private var playerScore: Int = 0
+    @State private var playerChoice: String = "rock"
+    @State private var playerHasPlayed: Bool = false
+    @State private var game: Int = 1
+    @State private var showingAlert = false
+    @State private var winLoseDraw: String = ""
+
     
     var body: some View {
         VStack {
@@ -42,13 +45,13 @@ struct ContentView: View {
             
             // App's move
             ZStack {
-                Circle()
-                    .fill(Color.gray)
-                    .overlay(Circle().stroke(Color.black, lineWidth: 4))
-                Image(playerHasPlayed ? moves[currentChoice] : "question")
+                Image(playerHasPlayed ? computerChoice : "question")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .padding(playerHasPlayed ? 10 : 40)
+                    .background(Color.gray)
+                    .clipShape(Circle())
+                    .overlay(Circle().stroke(Color.black, lineWidth: 4))
             }
             .padding(.horizontal, 125)
 
@@ -96,13 +99,54 @@ struct ContentView: View {
                 .overlay(Circle().stroke(Color.black, lineWidth: 4))
                 .padding()
             }
+            .alert(winLoseDraw == "draw" ? "Draw" : "You \(winLoseDraw)!", isPresented: $showingAlert) {
+                Button("OK", role: .cancel) {
+                    playerHasPlayed = false
+                }
+            } message: {
+                Text("Your goal was to \(shouldWin ? "win" : "lose"). You played \(playerChoice) and your opponent played \(computerChoice). Current score: \(playerScore)")
+            }
         }
     }
     
     func appPlay(_ playerChoice: String) {
         playerHasPlayed = true
-        currentChoice = Int.random(in: 0..<3)
+        computerChoice = moves[Int.random(in: 0..<3)]
         self.playerChoice = playerChoice
+        showingAlert = true
+        winner()
+    }
+    
+    func winner() {
+        if shouldWin {
+            if computerChoice == "rock" {
+                if playerChoice == "paper" { winLoseDraw = "win"; playerScore += 1 }
+                else if playerChoice == "scissors" { winLoseDraw = "lose"; playerScore -= 1 }
+                else { winLoseDraw = "draw" }
+            } else if computerChoice == "scissors" {
+                if playerChoice == "rock" { winLoseDraw = "win"; playerScore += 1 }
+                else if playerChoice == "paper" { winLoseDraw = "lose"; playerScore -= 1 }
+                else { winLoseDraw = "draw" }
+            } else if computerChoice == "paper" {
+                if playerChoice == "rock" { winLoseDraw = "lose"; playerScore -= 1 }
+                else if playerChoice == "scissors" { winLoseDraw = "win"; playerScore += 1 }
+                else { winLoseDraw = "draw" }
+            }
+        } else if !shouldWin {
+            if computerChoice == "rock" {
+                if playerChoice == "paper" { winLoseDraw = "lose"; playerScore -= 1 }
+                else if playerChoice == "scissors" { winLoseDraw = "win"; playerScore += 1 }
+                else { winLoseDraw = "draw" }
+            } else if computerChoice == "scissors" {
+                if playerChoice == "rock" { winLoseDraw = "lose"; playerScore -= 1 }
+                else if playerChoice == "paper" { winLoseDraw = "win"; playerScore += 1 }
+                else { winLoseDraw = "draw" }
+            } else if computerChoice == "paper" {
+                if playerChoice == "rock" { winLoseDraw = "win"; playerScore += 1 }
+                else if playerChoice == "scissors" { winLoseDraw = "lose"; playerScore -= 1 }
+                else { winLoseDraw = "draw" }
+            }
+        }
     }
 }
 
