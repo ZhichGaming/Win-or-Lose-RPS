@@ -9,6 +9,17 @@ import SwiftUI
 
 let moves: [String] = ["rock", "paper", "scissors"]
 
+struct PlayerButton: ViewModifier {
+    let color: Color
+    func body(content: Content) -> some View {
+        content
+            .background(color)
+            .clipShape(Circle())
+            .overlay(Circle().stroke(Color.black, lineWidth: 4))
+            .padding()
+    }
+}
+
 struct ContentView: View {
     
     @State private var computerChoice: String = moves[Int.random(in: 0..<3)]
@@ -68,7 +79,6 @@ struct ContentView: View {
                         .clipShape(Circle())
                         .overlay(Circle().stroke(Color.black, lineWidth: 4))
                 }
-
                 Spacer()
                 Divider()
 
@@ -85,10 +95,7 @@ struct ContentView: View {
                                 .aspectRatio(contentMode: .fit)
                                 .padding(5)
                         }
-                        .background(Color.red)
-                        .clipShape(Circle())
-                        .overlay(Circle().stroke(Color.black, lineWidth: 4))
-                        .padding()
+                        .modifier(PlayerButton(color: Color.red))
                         Button() {
                             playerChoice = "paper"
                             showingAlert = true
@@ -99,10 +106,7 @@ struct ContentView: View {
                                 .aspectRatio(contentMode: .fit)
                                 .padding(5)
                         }
-                        .background(Color.mint)
-                        .clipShape(Circle())
-                        .overlay(Circle().stroke(Color.black, lineWidth: 4))
-                        .padding()
+                        .modifier(PlayerButton(color: Color.mint))
                         Button() {
                             playerChoice = "scissors"
                             showingAlert = true
@@ -113,11 +117,9 @@ struct ContentView: View {
                                 .aspectRatio(contentMode: .fit)
                                 .padding(5)
                         }
-                        .background(Color.yellow)
-                        .clipShape(Circle())
-                        .overlay(Circle().stroke(Color.black, lineWidth: 4))
-                        .padding()
+                        .modifier(PlayerButton(color: Color.yellow))
                     }
+                    // Results alert
                     .alert(winLoseDraw == "draw" ? "Draw" : "You \(winLoseDraw)!", isPresented: $showingAlert) {
                         Button("OK", role: .cancel) {
                             shouldWin.toggle()
@@ -126,6 +128,7 @@ struct ContentView: View {
                     } message: {
                         Text("Your goal was to \(shouldWin ? "win" : "lose"). You played \(playerChoice) and your opponent played \(computerChoice). Current score: \(score)")
                     }
+                    // Final results alert
                     .alert("Your final score was \(score)/10", isPresented: $showingFinalAlert) {
                         Button("Restart", role: .cancel) {
                         }
