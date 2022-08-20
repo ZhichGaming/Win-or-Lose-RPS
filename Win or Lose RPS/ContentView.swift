@@ -24,15 +24,11 @@ struct ContentView: View {
     
     var body: some View {
         ZStack {
-            // Candy's solution of purple circle
-            VStack {
-                Color.purple
-                    .clipShape(Circle())
-                Color.clear
-            }
-            .offset(x: 0, y: -50)
-            .scaleEffect(1.8)
-            .ignoresSafeArea()
+            RadialGradient(stops: [
+                .init(color: Color.purple, location: 0.4),
+                .init(color: Color(red: 245/256, green: 225/256, blue: 253/256), location: 0.4),
+            ], center: .top, startRadius: 200, endRadius: 400)
+                .ignoresSafeArea()
             VStack {
                 // Title and description
                 Group {
@@ -66,12 +62,12 @@ struct ContentView: View {
                     Image(playerHasPlayed ? computerChoice : "question")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
-                        .padding(playerHasPlayed ? 10 : 40)
+                        .padding()
+                        .frame(width: 150, height: 150, alignment: .center)
                         .background(Color.gray)
                         .clipShape(Circle())
                         .overlay(Circle().stroke(Color.black, lineWidth: 4))
                 }
-                .padding(.horizontal, 125)
 
                 Spacer()
                 Divider()
