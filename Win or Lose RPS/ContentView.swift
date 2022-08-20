@@ -70,8 +70,7 @@ struct ContentView: View {
                 }
                 .background(Color.red)
                 .clipShape(Circle())
-                .overlay(
-                    Circle().stroke(Color.black, lineWidth: 4))
+                .overlay(Circle().stroke(Color.black, lineWidth: 4))
                 .padding()
                 Button() {
                     appPlay("paper")
@@ -83,8 +82,7 @@ struct ContentView: View {
                 }
                 .background(Color.mint)
                 .clipShape(Circle())
-                .overlay(
-                    Circle().stroke(Color.black, lineWidth: 4))
+                .overlay(Circle().stroke(Color.black, lineWidth: 4))
                 .padding()
                 Button() {
                     appPlay("scissors")
@@ -147,6 +145,8 @@ struct ContentView: View {
                 else { winLoseDraw = "draw" }
             }
         }
+        
+        if playerScore < 0 { playerScore = 0 }
     }
 }
 
