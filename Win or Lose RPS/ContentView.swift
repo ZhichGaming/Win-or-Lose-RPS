@@ -23,104 +23,120 @@ struct ContentView: View {
 
     
     var body: some View {
-        VStack {
-            Text("Win or lose RPS")
-                .font(.largeTitle)
-                .padding(.top)
-            Text("Standard rock paper scissors rules\n Fufill the objective below")
-                .font(.subheadline)
-                .padding(.horizontal)
-                .multilineTextAlignment(.center)
-            
-            HStack {
-                // Playerscore
-                Text("Score: \(String(score))")
-                    .font(.title2)
-                    .padding(.top, 5)
-                
-                // Objective
-                Text("Objective: \(shouldWin ? "Win" : "Lose")")
-                    .font(.title2)
-                    .padding(.top, 5)
-                }
-            Divider()
-            Text("Game \(game)/10")
-                .font(.title)
-            Spacer()
-            
-            // App's move
-            ZStack {
-                Image(playerHasPlayed ? computerChoice : "question")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .padding(playerHasPlayed ? 10 : 40)
-                    .background(Color.gray)
+        ZStack {
+            // Candy's solution of purple circle
+            VStack {
+                Color.purple
                     .clipShape(Circle())
-                    .overlay(Circle().stroke(Color.black, lineWidth: 4))
+                Color.clear
             }
-            .padding(.horizontal, 125)
+            .offset(x: 0, y: -50)
+            .scaleEffect(1.8)
+            .ignoresSafeArea()
+            VStack {
+                // Title and description
+                Group {
+                    Text("Win or lose RPS")
+                        .font(.largeTitle)
+                        .padding(.top)
+                    Text("Standard rock paper scissors rules\n Fufill the objective below")
+                        .font(.subheadline)
+                        .padding(.horizontal)
+                        .multilineTextAlignment(.center)
+                }
+                
+                HStack {
+                    // Playerscore
+                    Text("Score: \(String(score))")
+                        .font(.title2)
+                        .padding(.top, 5)
+                    
+                    // Objective
+                    Text("Objective: \(shouldWin ? "Win" : "Lose")")
+                        .font(.title2)
+                        .padding(.top, 5)
+                    }
+                Text("Game \(game)/10")
+                    .font(.title)
+                    .padding()
+                Spacer()
+                
+                // App's move
+                ZStack {
+                    Image(playerHasPlayed ? computerChoice : "question")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .padding(playerHasPlayed ? 10 : 40)
+                        .background(Color.gray)
+                        .clipShape(Circle())
+                        .overlay(Circle().stroke(Color.black, lineWidth: 4))
+                }
+                .padding(.horizontal, 125)
 
-            Spacer()
-            Divider()
+                Spacer()
+                Divider()
 
-            // Your move
-            HStack {
-                Button() {
-                    playerChoice = "rock"
-                    showingAlert = true
-                    logic()
-                } label: {
-                    Image("rock")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .padding(5)
+                // Your move
+                ZStack {
+                    HStack {
+                        Button() {
+                            playerChoice = "rock"
+                            showingAlert = true
+                            logic()
+                        } label: {
+                            Image("rock")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .padding(5)
+                        }
+                        .background(Color.red)
+                        .clipShape(Circle())
+                        .overlay(Circle().stroke(Color.black, lineWidth: 4))
+                        .padding()
+                        Button() {
+                            playerChoice = "paper"
+                            showingAlert = true
+                            logic()
+                        } label: {
+                            Image("paper")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .padding(5)
+                        }
+                        .background(Color.mint)
+                        .clipShape(Circle())
+                        .overlay(Circle().stroke(Color.black, lineWidth: 4))
+                        .padding()
+                        Button() {
+                            playerChoice = "scissors"
+                            showingAlert = true
+                            logic()
+                        } label: {
+                            Image("scissors")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .padding(5)
+                        }
+                        .background(Color.yellow)
+                        .clipShape(Circle())
+                        .overlay(Circle().stroke(Color.black, lineWidth: 4))
+                        .padding()
+                    }
+                    .alert(winLoseDraw == "draw" ? "Draw" : "You \(winLoseDraw)!", isPresented: $showingAlert) {
+                        Button("OK", role: .cancel) {
+                            shouldWin.toggle()
+                            playerHasPlayed = false
+                        }
+                    } message: {
+                        Text("Your goal was to \(shouldWin ? "win" : "lose"). You played \(playerChoice) and your opponent played \(computerChoice). Current score: \(score)")
+                    }
+                    .alert("Your final score was \(score)/10", isPresented: $showingFinalAlert) {
+                        Button("Restart", role: .cancel) {
+                        }
+                    } message: {
+                        Text(finalScoreMessage())
+                    }
                 }
-                .background(Color.red)
-                .clipShape(Circle())
-                .overlay(Circle().stroke(Color.black, lineWidth: 4))
-                .padding()
-                Button() {
-                    playerChoice = "paper"
-                    showingAlert = true
-                    logic()
-                } label: {
-                    Image("paper")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .padding(5)
-                }
-                .background(Color.mint)
-                .clipShape(Circle())
-                .overlay(Circle().stroke(Color.black, lineWidth: 4))
-                .padding()
-                Button() {
-                    playerChoice = "scissors"
-                    showingAlert = true
-                    logic()
-                } label: {
-                    Image("scissors")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .padding(5)
-                }
-                .background(Color.yellow)
-                .clipShape(Circle())
-                .overlay(Circle().stroke(Color.black, lineWidth: 4))
-                .padding()
-            }
-            .alert(winLoseDraw == "draw" ? "Draw" : "You \(winLoseDraw)!", isPresented: $showingAlert) {
-                Button("OK", role: .cancel) {
-                    shouldWin.toggle()
-                    playerHasPlayed = false
-                }
-            } message: {
-                Text("Your goal was to \(shouldWin ? "win" : "lose"). You played \(playerChoice) and your opponent played \(computerChoice). Current score: \(score)")
-            }
-            .alert("Your final score was \(score)/10", isPresented: $showingFinalAlert) {
-                Button("Restart", role: .cancel) {
-                }
-            } message: {
-                Text(finalScoreMessage())
             }
         }
     }
