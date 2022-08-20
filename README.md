@@ -9,6 +9,7 @@ Challenge(Day 25) of Hacking With Swift
  - The game ends after 10 questions, at which point their score is shown.
 <!-- end of the list -->
 So, if the app chose “Rock” and “Win” the player would need to choose “Paper”, but if the app chose “Rock” and “Lose” the player would need to choose “Scissors”.
+![](images/game.png)
 
 ## Ressources
 <a href="https://www.vecteezy.com/free-vector/rock-paper-scissors">Rock Paper Scissors Vectors by Vecteezy</a><br>
