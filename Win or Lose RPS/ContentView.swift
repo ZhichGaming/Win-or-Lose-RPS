@@ -34,7 +34,7 @@ struct ContentView: View {
             
             HStack {
                 // Playerscore
-                Text("Score: \(String(playerScore))")
+                Text("Score: \(String(score))")
                     .font(.title2)
                     .padding()
                 
@@ -110,24 +110,16 @@ struct ContentView: View {
                     playerHasPlayed = false
                 }
             } message: {
-                Text("Your goal was to \(shouldWin ? "win" : "lose"). You played \(playerChoice) and your opponent played \(computerChoice). Current score: \(playerScore)")
+                Text("Your goal was to \(shouldWin ? "win" : "lose"). You played \(playerChoice) and your opponent played \(computerChoice). Current score: \(score)")
             }
-            .alert("Your final score was \(playerScore)/10", isPresented: $showingFinalAlert) {
+            .alert("Your final score was \(score)/10", isPresented: $showingFinalAlert) {
                 Button("Restart", role: .cancel) {
                 }
             } message: {
-                Text(finalScoreMessage(playerScore))
+                Text(finalScoreMessage())
             }
         }
     }
-    
-//    func appPlay(_ playerChoice: String) {
-//        playerHasPlayed = true
-//        computerChoice = moves[Int.random(in: 0..<3)]
-//        self.playerChoice = playerChoice
-//        showingAlert = true
-//        logic()
-//    }
     
     func logic() {
         playerHasPlayed = true
