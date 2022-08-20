@@ -36,12 +36,16 @@ struct ContentView: View {
                 // Playerscore
                 Text("Score: \(String(score))")
                     .font(.title2)
-                    .padding()
+                    .padding(.top, 5)
                 
                 // Objective
                 Text("Objective: \(shouldWin ? "Win" : "Lose")")
                     .font(.title2)
+                    .padding(.top, 5)
                 }
+            Divider()
+            Text("Game \(game)/10")
+                .font(.title)
             Spacer()
             
             // App's move
