@@ -13,11 +13,12 @@ struct ContentView: View {
     
     @State private var computerChoice: String = moves[Int.random(in: 0..<3)]
     @State private var shouldWin: Bool = Bool.random()
-    @State private var playerScore: Int = 0
+    @State private var score: Int = 0
     @State private var playerChoice: String = "rock"
     @State private var playerHasPlayed: Bool = false
     @State private var game: Int = 1
     @State private var showingAlert = false
+    @State private var showingFinalAlert = false
     @State private var winLoseDraw: String = ""
 
     
@@ -61,7 +62,9 @@ struct ContentView: View {
             // Your move
             HStack {
                 Button() {
-                    appPlay("rock")
+                    playerChoice = "rock"
+                    showingAlert = true
+                    logic()
                 } label: {
                     Image("rock")
                         .resizable()
@@ -73,7 +76,9 @@ struct ContentView: View {
                 .overlay(Circle().stroke(Color.black, lineWidth: 4))
                 .padding()
                 Button() {
-                    appPlay("paper")
+                    playerChoice = "paper"
+                    showingAlert = true
+                    logic()
                 } label: {
                     Image("paper")
                         .resizable()
@@ -85,7 +90,9 @@ struct ContentView: View {
                 .overlay(Circle().stroke(Color.black, lineWidth: 4))
                 .padding()
                 Button() {
-                    appPlay("scissors")
+                    playerChoice = "scissors"
+                    showingAlert = true
+                    logic()
                 } label: {
                     Image("scissors")
                         .resizable()
@@ -99,54 +106,84 @@ struct ContentView: View {
             }
             .alert(winLoseDraw == "draw" ? "Draw" : "You \(winLoseDraw)!", isPresented: $showingAlert) {
                 Button("OK", role: .cancel) {
+                    shouldWin.toggle()
                     playerHasPlayed = false
                 }
             } message: {
                 Text("Your goal was to \(shouldWin ? "win" : "lose"). You played \(playerChoice) and your opponent played \(computerChoice). Current score: \(playerScore)")
             }
+            .alert("Your final score was \(playerScore)/10", isPresented: $showingFinalAlert) {
+                Button("Restart", role: .cancel) {
+                }
+            } message: {
+                Text(finalScoreMessage(playerScore))
+            }
         }
     }
     
-    func appPlay(_ playerChoice: String) {
+//    func appPlay(_ playerChoice: String) {
+//        playerHasPlayed = true
+//        computerChoice = moves[Int.random(in: 0..<3)]
+//        self.playerChoice = playerChoice
+//        showingAlert = true
+//        logic()
+//    }
+    
+    func logic() {
         playerHasPlayed = true
         computerChoice = moves[Int.random(in: 0..<3)]
-        self.playerChoice = playerChoice
-        showingAlert = true
-        winner()
-    }
-    
-    func winner() {
+        
         if shouldWin {
             if computerChoice == "rock" {
-                if playerChoice == "paper" { winLoseDraw = "win"; playerScore += 1 }
-                else if playerChoice == "scissors" { winLoseDraw = "lose"; playerScore -= 1 }
+                if playerChoice == "paper" { winLoseDraw = "win"; score += 1 }
+                else if playerChoice == "scissors" { winLoseDraw = "lose"; score -= 1 }
                 else { winLoseDraw = "draw" }
             } else if computerChoice == "scissors" {
-                if playerChoice == "rock" { winLoseDraw = "win"; playerScore += 1 }
-                else if playerChoice == "paper" { winLoseDraw = "lose"; playerScore -= 1 }
+                if playerChoice == "rock" { winLoseDraw = "win"; score += 1 }
+                else if playerChoice == "paper" { winLoseDraw = "lose"; score -= 1 }
                 else { winLoseDraw = "draw" }
             } else if computerChoice == "paper" {
-                if playerChoice == "rock" { winLoseDraw = "lose"; playerScore -= 1 }
-                else if playerChoice == "scissors" { winLoseDraw = "win"; playerScore += 1 }
+                if playerChoice == "rock" { winLoseDraw = "lose"; score -= 1 }
+                else if playerChoice == "scissors" { winLoseDraw = "win"; score += 1 }
                 else { winLoseDraw = "draw" }
             }
         } else if !shouldWin {
             if computerChoice == "rock" {
-                if playerChoice == "paper" { winLoseDraw = "lose"; playerScore -= 1 }
-                else if playerChoice == "scissors" { winLoseDraw = "win"; playerScore += 1 }
+                if playerChoice == "paper" { winLoseDraw = "lose"; score -= 1 }
+                else if playerChoice == "scissors" { winLoseDraw = "win"; score += 1 }
                 else { winLoseDraw = "draw" }
             } else if computerChoice == "scissors" {
-                if playerChoice == "rock" { winLoseDraw = "lose"; playerScore -= 1 }
-                else if playerChoice == "paper" { winLoseDraw = "win"; playerScore += 1 }
+                if playerChoice == "rock" { winLoseDraw = "lose"; score -= 1 }
+                else if playerChoice == "paper" { winLoseDraw = "win"; score += 1 }
                 else { winLoseDraw = "draw" }
             } else if computerChoice == "paper" {
-                if playerChoice == "rock" { winLoseDraw = "win"; playerScore += 1 }
-                else if playerChoice == "scissors" { winLoseDraw = "lose"; playerScore -= 1 }
+                if playerChoice == "rock" { winLoseDraw = "win"; score += 1 }
+                else if playerChoice == "scissors" { winLoseDraw = "lose"; score -= 1 }
                 else { winLoseDraw = "draw" }
             }
         }
         
-        if playerScore < 0 { playerScore = 0 }
+        if score < 0 { score = 0 }
+        
+        if game >= 10 {
+            game = 0
+            score = 0
+            showingFinalAlert = true
+        } else {
+            game += 1
+        }
+    }
+    
+    func finalScoreMessage() -> String {
+        if score <= 4 {
+            return "You failed! You'll do better next time!"
+        } else if score <= 8 {
+            return "Not bad! You got pretty good luck!"
+        } else if score == 9 {
+            return "You almost got a full score!"
+        } else {
+            return "Congratulations! You got a full score!"
+        }
     }
 }
 
