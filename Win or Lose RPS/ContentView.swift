@@ -50,6 +50,7 @@ struct ContentView: View {
                         .font(.subheadline)
                         .padding(.horizontal)
                         .multilineTextAlignment(.center)
+                    
                     HStack {
                         // Playerscore
                         Text("Score: \(String(score))")
@@ -66,7 +67,6 @@ struct ContentView: View {
                         .padding()
                 }
                 .foregroundColor(Color(red: 250/256, green: 240/256, blue: 256/256))
-
                 Spacer()
                 
                 // App's move
@@ -76,47 +76,53 @@ struct ContentView: View {
                         .aspectRatio(contentMode: .fit)
                         .padding()
                         .frame(width: 150, height: 150, alignment: .center)
-//                        .overlay(Circle().stroke(Color.black, lineWidth: 4))
                 }
                 Spacer()
-                Divider()
 
                 // Your move
-                HStack(spacing: 0) {
-                    Button() {
-                        playerChoice = "rock"
-                        showingAlert = true
-                        logic()
-                    } label: {
-                        Image("rock")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .padding(5)
+                ZStack {
+                    RoundedRectangle(cornerRadius: 39)
+                        .foregroundColor(Color(red: 206/256,green: 157/256, blue: 217/256))
+                        .frame(width: .infinity, height: 120, alignment: .center)
+                    
+                    HStack(spacing: 0) {
+                        Button() {
+                            playerChoice = "rock"
+                            showingAlert = true
+                            logic()
+                        } label: {
+                            Image("rock")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .padding(5)
+                        }
+                        .modifier(PlayerButton(color: Color(red: 206/256,green: 157/256, blue: 217/256)))
+                        Button() {
+                            playerChoice = "paper"
+                            showingAlert = true
+                            logic()
+                        } label: {
+                            Image("paper")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .padding(5)
+                        }
+                        .modifier(PlayerButton(color: Color(red: 206/256,green: 157/256, blue: 217/256)))
+                        Button() {
+                            playerChoice = "scissors"
+                            showingAlert = true
+                            logic()
+                        } label: {
+                            Image("scissors")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .padding(5)
+                        }
+                        .modifier(PlayerButton(color: Color(red: 206/256,green: 157/256, blue: 217/256)))
                     }
-                    .modifier(PlayerButton(color: Color(red: 206/256,green: 157/256, blue: 217/256)))
-                    Button() {
-                        playerChoice = "paper"
-                        showingAlert = true
-                        logic()
-                    } label: {
-                        Image("paper")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .padding(5)
-                    }
-                    .modifier(PlayerButton(color: Color(red: 206/256,green: 157/256, blue: 217/256)))
-                    Button() {
-                        playerChoice = "scissors"
-                        showingAlert = true
-                        logic()
-                    } label: {
-                        Image("scissors")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .padding(5)
-                    }
-                    .modifier(PlayerButton(color: Color(red: 206/256,green: 157/256, blue: 217/256)))
                 }
+                .padding()
+                
                 // Results alert
                 .alert(winLoseDraw == "draw" ? "Draw" : "You \(winLoseDraw)!", isPresented: $showingAlert) {
                     Button("OK", role: .cancel) {
@@ -126,6 +132,7 @@ struct ContentView: View {
                 } message: {
                     Text("Your goal was to \(shouldWin ? "win" : "lose"). You played \(playerChoice) and your opponent played \(computerChoice). Current score: \(score)")
                 }
+                
                 // Final results alert
                 .alert("Your final score was \(score)/10", isPresented: $showingFinalAlert) {
                     Button("Restart", role: .cancel) {
