@@ -83,7 +83,8 @@ struct ContentView: View {
                 ZStack {
                     RoundedRectangle(cornerRadius: 39)
                         .foregroundColor(Color(red: 206/256,green: 157/256, blue: 217/256))
-                        .frame(width: .infinity, height: 120, alignment: .center)
+                        .frame(maxWidth: .infinity, maxHeight: 120, alignment: .center)
+                        .shadow(color: .purple, radius: 5, x: 4, y: 5)
                     
                     HStack(spacing: 0) {
                         Button() {
