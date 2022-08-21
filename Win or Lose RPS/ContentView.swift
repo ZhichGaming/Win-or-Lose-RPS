@@ -129,6 +129,14 @@ struct ContentView: View {
                     Button("OK", role: .cancel) {
                         shouldWin.toggle()
                         playerHasPlayed = false
+                        
+                        if game >= 10 {
+                            game = 0
+                            score = 0
+                            showingFinalAlert = true
+                        } else {
+                            game += 1
+                        }
                     }
                 } message: {
                     Text("Your goal was to \(shouldWin ? "win" : "lose"). You played \(playerChoice) and your opponent played \(computerChoice). Current score: \(score)")
@@ -181,14 +189,6 @@ struct ContentView: View {
         }
         
         if score < 0 { score = 0 }
-        
-        if game >= 10 {
-            game = 0
-            score = 0
-            showingFinalAlert = true
-        } else {
-            game += 1
-        }
     }
     
     func finalScoreMessage() -> String {
